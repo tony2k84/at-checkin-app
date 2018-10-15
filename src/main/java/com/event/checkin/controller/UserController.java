@@ -54,6 +54,13 @@ class LoginRequest {
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+class LoginResponse {
+	private String token;
+}
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 class ValidationResponse {
 	private String name;
 }
@@ -129,7 +136,7 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public ResponseEntity<String> login(@RequestBody LoginRequest request) {
+	public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
 		Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                 		request.getUsername(),
@@ -150,12 +157,12 @@ public class UserController {
         	_user.getQrCodeInfo().setValidationToken(res.getBody());
         	userRepository.save(_user);
         }else {
-        	return ResponseEntity.badRequest().body("can't connect to authentical url");
+        	return ResponseEntity.badRequest().body(new LoginResponse(null));
         }
-        return ResponseEntity.ok(jwt);
+        return ResponseEntity.ok(new LoginResponse(jwt));
 	}
 	@RequestMapping(value = "/admin/login", method = RequestMethod.POST)
-	public ResponseEntity<String> adminLogin(@RequestBody LoginRequest request) {
+	public ResponseEntity<LoginResponse> adminLogin(@RequestBody LoginRequest request) {
 		Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                 		request.getUsername(),
@@ -165,6 +172,6 @@ public class UserController {
 		
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = tokenProvider.generateToken(authentication);
-        return ResponseEntity.ok(jwt);
+        return ResponseEntity.ok(new LoginResponse(jwt));
 	}
 }
