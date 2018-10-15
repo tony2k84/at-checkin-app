@@ -154,4 +154,17 @@ public class UserController {
         }
         return ResponseEntity.ok(jwt);
 	}
+	@RequestMapping(value = "/admin/login", method = RequestMethod.POST)
+	public ResponseEntity<String> adminLogin(@RequestBody LoginRequest request) {
+		Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                		request.getUsername(),
+                		request.getPassword()
+                )
+        );
+		
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = tokenProvider.generateToken(authentication);
+        return ResponseEntity.ok(jwt);
+	}
 }
