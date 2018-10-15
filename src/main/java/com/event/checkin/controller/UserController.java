@@ -152,9 +152,17 @@ public class UserController {
         QrCodeInfo qrCodeInfo = _user.getQrCodeInfo();
         
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> res = restTemplate.postForEntity(qrCodeInfo.getLoginUri(),new LoginRequest(qrCodeInfo.getLoginUser(), qrCodeInfo.getLoginPassword()), String.class);
+        
+        ResponseEntity<LoginResponse> res = restTemplate.postForEntity(
+        		qrCodeInfo.getLoginUri(),
+        		new LoginRequest(
+        				qrCodeInfo.getLoginUser(), 
+        				qrCodeInfo.getLoginPassword()
+        			), 
+        			LoginResponse.class);
+        
         if(res.getStatusCode() == HttpStatus.OK) {
-        	_user.getQrCodeInfo().setValidationToken(res.getBody());
+        	_user.getQrCodeInfo().setValidationToken(res.getBody().getToken());
         	userRepository.save(_user);
         }else {
         	return ResponseEntity.badRequest().body(new LoginResponse(null));
