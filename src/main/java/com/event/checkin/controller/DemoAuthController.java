@@ -24,8 +24,8 @@ public class DemoAuthController {
 	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public ResponseEntity<String> login() {
+	public ResponseEntity<LoginResponse> login() {
 		logger.debug("returning dummy token");
-        return ResponseEntity.ok(UUID.randomUUID().toString());
+        return ResponseEntity.ok(new LoginResponse(UUID.randomUUID().toString()));
 	}
 }
