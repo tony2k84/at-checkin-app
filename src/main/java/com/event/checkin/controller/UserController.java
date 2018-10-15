@@ -154,7 +154,6 @@ public class UserController {
         }
         return ResponseEntity.ok(jwt);
 	}
-	@Secured("ROLE_ADMIN")
 	@RequestMapping(value = "/admin/login", method = RequestMethod.POST)
 	public ResponseEntity<String> adminLogin(@RequestBody LoginRequest request) {
 		Authentication authentication = authenticationManager.authenticate(
